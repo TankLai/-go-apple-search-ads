@@ -1,2 +1,2 @@
-# -go-apple-search-ads
+# go-apple-search-ads
 Apple Search Ads
