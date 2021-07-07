@@ -42,6 +42,25 @@ func (s *CampaignNegativeKeywordService) List(ctx context.Context, campaignID in
 	return negativekeywords, resp, nil
 }
 
+// Fetches negative keywords for campaigns.
+func (s *CampaignNegativeKeywordService) Find(ctx context.Context, campaignID int64, selector *Selector) ([]*NegativeKeyword, *Response, error) {
+	if campaignID == 0 {
+		return nil, nil, fmt.Errorf("campaignID can not be 0")
+	}
+
+	req, err := s.client.NewRequest("POST", fmt.Sprintf("campaigns/%d/negativekeywords/find", campaignID), selector)
+	if err != nil {
+		return nil, nil, err
+	}
+	keywords := []*NegativeKeyword{}
+	resp, err := s.client.Do(ctx, req, &keywords)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return keywords, resp, nil
+}
+
 // CreateBulk will create multiple Negative Keywords for a campaign
 func (s *CampaignNegativeKeywordService) CreateBulk(ctx context.Context, campaignID int64, data []*NegativeKeyword) ([]*NegativeKeyword, *Response, error) {
 	if campaignID == 0 {
@@ -78,6 +97,23 @@ func (s *CampaignNegativeKeywordService) UpdateBulk(ctx context.Context, campaig
 	return negativekeywords, resp, nil
 }
 
+// Deletes negative keywords from a campaign.
+func (s *CampaignNegativeKeywordService) Delete(ctx context.Context, campaignID int64, keywordsIDs []int) (*int, *Response, error) {
+	u := fmt.Sprintf("campaigns/%d/negativekeywords/delete/bulk", campaignID)
+	req, err := s.client.NewRequest("POST", u, keywordsIDs)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var c int
+	resp, err := s.client.Do(ctx, req, &c)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return &c, resp, nil
+}
+
 // AdGroupNegativeKeywordService to handle Negative Keywords of
 type AdGroupNegativeKeywordService service
 
@@ -106,8 +142,27 @@ func (s *AdGroupNegativeKeywordService) List(ctx context.Context, campaignID int
 	return negativekeywords, resp, nil
 }
 
+// Fetches negative keywords in ad groups.
+func (s *AdGroupNegativeKeywordService) Find(ctx context.Context, campaignID int64, selector *Selector) ([]*NegativeKeyword, *Response, error) {
+	if campaignID == 0 {
+		return nil, nil, fmt.Errorf("campaignID can not be 0")
+	}
+
+	req, err := s.client.NewRequest("POST", fmt.Sprintf("campaigns/%d/adgroups/negativekeywords/find", campaignID), selector)
+	if err != nil {
+		return nil, nil, err
+	}
+	keywords := []*NegativeKeyword{}
+	resp, err := s.client.Do(ctx, req, &keywords)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return keywords, resp, nil
+}
+
 // CreateBulk will create multiple Negative Keywords for a campaign
-func (s *AdGroupNegativeKeywordService) CreateBulk(ctx context.Context, campaignID int64, adGroupID int64, data []*NegativeKeyword) ([]*NegativeKeyword, *Response, error) {
+func (s *AdGroupNegativeKeywordService) CreateBulk(ctx context.Context, campaignID, adGroupID int64, data []*NegativeKeyword) ([]*NegativeKeyword, *Response, error) {
 	if campaignID == 0 {
 		return nil, nil, fmt.Errorf("campaignID can not be 0")
 	}
@@ -129,7 +184,7 @@ func (s *AdGroupNegativeKeywordService) CreateBulk(ctx context.Context, campaign
 }
 
 // UpdateBulk will create multiple Negative Keywords for a campaign
-func (s *AdGroupNegativeKeywordService) UpdateBulk(ctx context.Context, campaignID int64, adGroupID int64, data []*NegativeKeyword) ([]*NegativeKeyword, *Response, error) {
+func (s *AdGroupNegativeKeywordService) UpdateBulk(ctx context.Context, campaignID, adGroupID int64, data []*NegativeKeyword) ([]*NegativeKeyword, *Response, error) {
 	if campaignID == 0 {
 		return nil, nil, fmt.Errorf("campaignID can not be 0")
 	}
@@ -148,4 +203,21 @@ func (s *AdGroupNegativeKeywordService) UpdateBulk(ctx context.Context, campaign
 	}
 
 	return negativekeywords, resp, nil
+}
+
+// Deletes negative keywords from an ad group.
+func (s *AdGroupNegativeKeywordService) Delete(ctx context.Context, campaignID, adGroupID int64, keywordsIDs []int) (*int, *Response, error) {
+	u := fmt.Sprintf("campaigns/%d/adgroups/%d/negativekeywords/delete/bulk", campaignID, adGroupID)
+	req, err := s.client.NewRequest("POST", u, keywordsIDs)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var c int
+	resp, err := s.client.Do(ctx, req, &c)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return &c, resp, nil
 }

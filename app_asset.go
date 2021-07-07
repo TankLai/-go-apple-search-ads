@@ -6,8 +6,8 @@ import (
 )
 
 type AppAssetOpt struct {
-	CountriesOrRegions []CountryCode `json:"countriesOrRegions,omitempty"`
-	AssetsGenIds       []string      `json:"assetsGenIds,omitempty"`
+	CountryOrRegions []CountryCode `json:"countryOrRegions,omitempty"`
+	AssetsGenIds     []string      `json:"assetsGenIds,omitempty"`
 }
 
 type CreativeSetAssetsDetail struct {

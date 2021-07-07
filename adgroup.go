@@ -2,6 +2,7 @@ package searchads
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 )
 
@@ -18,14 +19,14 @@ type AdGroup struct {
 	AutomatedKeywordsOptIn bool                 `json:"automatedKeywordsOptIn"`
 	DefaultBidAmount       *Amount              `json:"defaultBidAmount,omitempty"`
 	TargetingDimensions    *TargetingDimensions `json:"targetingDimensions,omitempty"`
-	OrgID                  int                  `json:"orgId,omitempty"`
+	OrgID                  int64                `json:"orgId,omitempty"`
 	ModificationTime       string               `json:"modificationTime,omitempty"`
-	Status                 *Status              `json:"status,omitempty"`
-	ServingStatus          *ServingStatus       `json:"servingStatus,omitempty"`
-	DisplayStatus          *DisplayStatus       `json:"displayStatus,omitempty"`
+	Status                 Status               `json:"status,omitempty"`
+	ServingStatus          ServingStatus        `json:"servingStatus,omitempty"`
+	DisplayStatus          DisplayStatus        `json:"displayStatus,omitempty"`
 	ServingStateReasons    []string             `json:"servingStateReasons,omitempty"`
 	Deleted                bool                 `json:"deleted,omitempty"`
-	PricingModel           *PricingModel        `json:"pricingModel,omitempty"`
+	PricingModel           PricingModel         `json:"pricingModel,omitempty"`
 }
 
 type TargetingDimensions struct {
@@ -48,8 +49,8 @@ type Age struct {
 }
 
 type AgeObj struct {
-	MinAge string `json:"minAge,omitempty"`
-	MaxAge string `json:"maxAge,omitempty"`
+	MinAge int `json:"minAge,omitempty"`
+	MaxAge int `json:"maxAge,omitempty"`
 }
 
 type Gender struct {
@@ -129,6 +130,8 @@ func (s *AdGroupService) Create(ctx context.Context, campaignID int64, data *AdG
 	if campaignID == 0 {
 		return nil, nil, fmt.Errorf("campaignID can not be 0")
 	}
+	aa, _ := json.Marshal(data)
+	fmt.Println(string(aa))
 	u := fmt.Sprintf("campaigns/%d/adgroups", campaignID)
 	req, err := s.client.NewRequest("POST", u, data)
 	if err != nil {

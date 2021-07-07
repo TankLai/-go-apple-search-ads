@@ -3,84 +3,51 @@ package searchads
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
-	"reflect"
-	"strings"
 	"testing"
 )
 
 func TestAdGroupTargetingKeywordService_List(t *testing.T) {
-	client, mux, _, teardown := setup()
-	t.Log("Setup Done")
-	defer teardown()
-
-	mux.HandleFunc("/campaigns/1234/adgroups/1234/targetingkeywords", func(w http.ResponseWriter, r *http.Request) {
-		testMethod(t, r, "GET")
-		w.WriteHeader(http.StatusOK)
-		w.Write(loadFixture("adgroup_targeting_keywords.json"))
-	})
-	opt := ListOptions{}
-	got, _, err := client.AdGroupTargetingKeyword.List(context.Background(), 1234, 1234, &opt)
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("AdGroupTargetingKeyword.List returned error: %v", err)
+		panic(err)
 	}
-
-	want := []*TargetingKeyword{}
-	responseToInterface(loadFixture("adgroup_targeting_keywords.json"), &want)
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("AdGroupTargetingKeyword.List = %+v, want %+v", got, want)
+	newK, _, err := client.AdGroupTargetingKeyword.List(context.Background(), campaignID, 580704484, nil)
+	if err != nil {
+		panic(err)
 	}
+	aa, _ := json.Marshal(newK)
+	fmt.Printf(string(aa))
 }
 func TestAdGroupTargetingKeywordService_CreateBulk(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
-
-	nk := TargetingKeyword{
-		AdGroupID: 1234,
-		Text:      "i do negative keywords",
-		MatchType: MatchTypeExact,
-		Status:    KEYWORD_ACTIVE,
-		BidAmount: Amount{
-			Amount:   "1.50",
-			Currency: "EUR",
-		},
-	}
-
-	input := []*TargetingKeyword{&nk}
-
-	wantAcceptHeaders := []string{"application/json"}
-	mux.HandleFunc("/campaigns/1234/adgroups/1234/targetingkeywords/bulk", func(w http.ResponseWriter, r *http.Request) {
-		v := []*TargetingKeyword{}
-		json.NewDecoder(r.Body).Decode(&v)
-		testMethod(t, r, "POST")
-		testHeader(t, r, "Accept", strings.Join(wantAcceptHeaders, ", "))
-		if !reflect.DeepEqual(v, input) {
-			t.Errorf("Request body = %+v, want %+v", v, input)
-		}
-		w.Write(loadFixture("adgroup_targeting_keyword_bulk.json"))
-	})
-
-	got, _, err := client.AdGroupTargetingKeyword.CreateBulk(context.Background(), 1234, 1234, input)
-
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("AdGroupTargetingKeyword.CreateBulk returned error: %v", err)
+		panic(err)
 	}
-	want := []*TargetingKeyword{
-		&TargetingKeyword{
-			ID:        1,
-			AdGroupID: 1234,
-			Text:      "i do negative keywords",
-			MatchType: MatchTypeExact,
+	newK, _, err := client.AdGroupTargetingKeyword.CreateBulk(context.Background(), campaignID, 580704484, []*TargetingKeyword{
+		{
+			Text:      "muiscally",
 			Status:    KEYWORD_ACTIVE,
+			MatchType: MatchTypeExact,
 			BidAmount: Amount{
-				Amount:   "1.50",
-				Currency: "EUR",
+				Amount:   "0.5",
+				Currency: "USD",
 			},
-			ModificationTime: "2019-02-22T15:25:46.851",
-			Deleted:          false,
 		},
+		{
+			Text:      "toktok",
+			Status:    KEYWORD_ACTIVE,
+			MatchType: MatchTypeExact,
+			BidAmount: Amount{
+				Amount:   "0.6",
+				Currency: "USD",
+			},
+		},
+	})
+	if err != nil {
+		panic(err)
 	}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("AdGroupTargetingKeyword.CreateBulk returned %+v, want %+v", got, want)
-	}
+	aa, _ := json.Marshal(newK)
+	fmt.Printf(string(aa))
 }

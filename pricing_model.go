@@ -10,7 +10,7 @@ type PricingModel byte
 
 // CPC and CPM enum values
 const (
-	CPC PricingModel = iota
+	CPC PricingModel = iota + 1
 	CPM
 )
 

@@ -120,11 +120,11 @@ func NewV4Client(httpClient *http.Client, Authorization string, orgID *int64) (*
 	c.AdGroup = (*AdGroupService)(&c.common)
 	c.AdGroupNegativeKeyword = (*AdGroupNegativeKeywordService)(&c.common)
 	c.AdGroupTargetingKeyword = (*AdGroupTargetingKeywordService)(&c.common)
-	c.ACL = (*ACLService)(&c.common)
-	c.Report = (*ReportService)(&c.common)
 	c.CreativeSet = (*CreativeSetService)(&c.common)
 	c.AppAsset = (*AppAssetService)(&c.common)
 	c.Search = (*SearchService)(&c.common)
+	c.ACL = (*ACLService)(&c.common)
+	c.Report = (*ReportService)(&c.common)
 	return c, nil
 }
 
@@ -185,8 +185,8 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Res
 		}
 		// If the error type is *url.Error
 		if e, ok := err.(*url.Error); ok {
-			if url, err := url.Parse(e.URL); err == nil {
-				e.URL = url.String()
+			if urlObj, err := url.Parse(e.URL); err == nil {
+				e.URL = urlObj.String()
 				return nil, e
 			}
 		}
@@ -236,6 +236,7 @@ func CheckResponse(r *http.Response) error {
 	}
 	errorResponse := &ErrorResponse{Response: r}
 	data, err := ioutil.ReadAll(r.Body)
+	fmt.Println(string(data))
 	if err == nil && data != nil {
 		json.Unmarshal(data, errorResponse)
 	}

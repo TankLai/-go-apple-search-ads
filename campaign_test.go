@@ -5,138 +5,107 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"reflect"
 	"strings"
 	"testing"
 )
 
 func TestCampaignService_List(t *testing.T) {
-	client, mux, _, teardown := setup()
-	t.Log("Setup Done")
-	defer teardown()
-
-	mux.HandleFunc("/campaigns", func(w http.ResponseWriter, r *http.Request) {
-		testMethod(t, r, "GET")
-
-		w.WriteHeader(http.StatusOK)
-		w.Write(loadFixture("campaigns.json"))
-	})
-	opt := ListOptions{}
-	got, _, err := client.Campaign.List(context.Background(), &opt)
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("Campaign.List returned error: %v", err)
+		panic(err)
 	}
-
-	want := []*Campaign{}
-	responseToInterface(loadFixture("campaigns.json"), &want)
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Campaign.List = %+v, want %+v", got, want)
+	newC, _, err := client.Campaign.List(context.Background(), &ListOptions{
+		Limit:  100,
+		Offset: 0,
+	})
+	if err != nil {
+		panic(err)
 	}
+	aa, _ := json.Marshal(newC)
+	fmt.Printf(string(aa))
 }
 
 func TestCampaignService_Get(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
-
-	wantAcceptHeaders := []string{"application/json"}
-	mux.HandleFunc("/campaigns/235557343", func(w http.ResponseWriter, r *http.Request) {
-		testMethod(t, r, "GET")
-		testHeader(t, r, "Accept", strings.Join(wantAcceptHeaders, ", "))
-		w.Write(loadFixture("campaign.json"))
-	})
-
-	got, _, err := client.Campaign.Get(context.Background(), 235557343)
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("Campaign.Get returned error: %v", err)
+		panic(err)
 	}
-
-	want := &Campaign{}
-	responseToInterface(loadFixture("campaign.json"), want)
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Campaign.Get returned %+v, want %+v", got, want)
+	newC, _, err := client.Campaign.Get(context.Background(), 580657822)
+	if err != nil {
+		panic(err)
 	}
+	// ID:580657822
+	aa, _ := json.Marshal(newC)
+	fmt.Printf(string(aa))
 }
 
 func TestCampaignService_Create(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
-
-	input := &Campaign{Name: "t"}
-
-	wantAcceptHeaders := []string{"application/json"}
-	mux.HandleFunc("/campaigns", func(w http.ResponseWriter, r *http.Request) {
-		v := new(Campaign)
-		json.NewDecoder(r.Body).Decode(v)
-		testMethod(t, r, "POST")
-		testHeader(t, r, "Accept", strings.Join(wantAcceptHeaders, ", "))
-		if !reflect.DeepEqual(v, input) {
-			t.Errorf("Request body = %+v, want %+v", v, input)
-		}
-		fmt.Fprint(w, `{ "data": {"id":1} }`)
-	})
-
-	got, _, err := client.Campaign.Create(context.Background(), input)
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("Campaign.Create returned error: %v", err)
+		panic(err)
 	}
-
-	want := &Campaign{ID: 1}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Campaign.Create returned %+v, want %+v", got, want)
+	newC, _, err := client.Campaign.Create(context.Background(), &Campaign{
+		OrgID: orgID,
+		Name:  "go-sdk-example2",
+		BudgetAmount: Amount{
+			Amount:   "10",
+			Currency: "USD",
+		},
+		DailyBudgetAmount: Amount{
+			Amount:   "1",
+			Currency: "USD",
+		},
+		AdamID:             1508944184,
+		CountriesOrRegions: []CountryCode{US},
+		AdChannelType:      SEARCH,
+		BillingEvent:       TAPS,
+		SupplySources:      []SupplySources{APPSTORE_SEARCH_RESULTS},
+	})
+	if err != nil {
+		panic(err)
 	}
+	// ID:580657822
+	aa, _ := json.Marshal(newC)
+	fmt.Printf(string(aa))
 }
 
 func TestCampaignService_Edit(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
-
-	input := &Campaign{Name: "New Name"}
-
-	wantAcceptHeaders := []string{"application/json"}
-	mux.HandleFunc("/campaigns/235557343", func(w http.ResponseWriter, r *http.Request) {
-		v := new(Campaign)
-		json.NewDecoder(r.Body).Decode(v)
-		testMethod(t, r, "PUT")
-		testHeader(t, r, "Accept", strings.Join(wantAcceptHeaders, ", "))
-		if !reflect.DeepEqual(v, input) {
-			t.Errorf("Request body = %+v, want %+v", v, input)
-		}
-		w.Write(loadFixture("campaign_update.json"))
-	})
-
-	got, _, err := client.Campaign.Edit(context.Background(), 235557343, input, false)
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("Campaign.Edit returned error: %v", err)
+		panic(err)
 	}
-
-	want := &Campaign{}
-	responseToInterface(loadFixture("campaign_update.json"), want)
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Campaign.Edit returned %+v, want %+v", got, want)
+	newC, _, err := client.Campaign.Edit(context.Background(), 580657822, &Campaign{
+		Name: "go-sdk-example-update",
+		BudgetAmount: Amount{
+			Amount:   "15",
+			Currency: "USD",
+		},
+		DailyBudgetAmount: Amount{
+			Amount:   "1",
+			Currency: "USD",
+		},
+		CountriesOrRegions: []CountryCode{US, FR},
+	}, true)
+	if err != nil {
+		panic(err)
 	}
+	// ID:580657822
+	aa, _ := json.Marshal(newC)
+	fmt.Printf(string(aa))
 }
 
 func TestCampaignService_Delete(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
-
-	wantAcceptHeaders := []string{"application/json"}
-	mux.HandleFunc("/campaigns/235557343", func(w http.ResponseWriter, r *http.Request) {
-		testMethod(t, r, "DELETE")
-		testHeader(t, r, "Accept", strings.Join(wantAcceptHeaders, ", "))
-		w.WriteHeader(http.StatusOK)
-		w.Write(loadFixture("campaign_delete.json"))
-	})
-
-	resp, err := client.Campaign.Delete(context.Background(), 235557343)
+	// 580564833
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("Campaign.Delete returned error: %v", err)
+		panic(err)
 	}
-	want := http.StatusOK
-	got := resp.StatusCode
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Campaign.Delete returned %+v, want %+v", got, want)
+	resp, err := client.Campaign.Delete(context.Background(), 580564833)
+	if err != nil {
+		panic(err)
 	}
+	aa, _ := json.Marshal(resp)
+	fmt.Printf(string(aa))
 }
 
 func TestCountryCode_String(t *testing.T) {

@@ -32,11 +32,15 @@ type Asset struct {
 type CreativeSetService service
 
 // Fetches all Creative Sets assigned to ad groups.
-func (s *CreativeSetService) List(ctx context.Context, campaignID int, opt *Selector) ([]*CreativeSet, *Response, error) {
+func (s *CreativeSetService) List(ctx context.Context, campaignID int64, opt *Selector) ([]*CreativeSet, *Response, error) {
 	if campaignID == 0 {
 		return nil, nil, fmt.Errorf("campaignID can not be 0")
 	}
-	req, err := s.client.NewRequest("POST", fmt.Sprintf("campaigns/%d/adgroupcreativesets/find", campaignID), opt)
+	mapOpt := map[string]interface{}{}
+	if opt == nil {
+		mapOpt["selector"] = opt
+	}
+	req, err := s.client.NewRequest("POST", fmt.Sprintf("campaigns/%d/adgroupcreativesets/find", campaignID), mapOpt)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -56,7 +60,7 @@ type AdVariationOpt struct {
 }
 
 // Fetches supported app preview device size mappings.
-func (s *CreativeSetService) Get(ctx context.Context, creativeSetID int, opt *AdVariationOpt) (*CreativeSet, *Response, error) {
+func (s *CreativeSetService) Get(ctx context.Context, creativeSetID int64, opt *AdVariationOpt) (*CreativeSet, *Response, error) {
 	if creativeSetID == 0 {
 		return nil, nil, fmt.Errorf("campaignID can not be 0")
 	}
@@ -80,12 +84,12 @@ func (s *CreativeSetService) Get(ctx context.Context, creativeSetID int, opt *Ad
 }
 
 type OrganizationCreativeSetsOpt struct {
-	IncludeDeletedCreativeSetAssets bool     `json:"includeDeletedCreativeSetAssets"`
-	Selector                        Selector `json:"selector"`
+	IncludeDeletedCreativeSetAssets bool      `json:"includeDeletedCreativeSetAssets"`
+	Selector                        *Selector `json:"selector"`
 }
 
 // Fetches all Creative Sets assigned to an organization.
-func (s *CreativeSetService) Find(ctx context.Context, opt *Selector) ([]*CreativeSet, *Response, error) {
+func (s *CreativeSetService) FindInOrganization(ctx context.Context, opt *OrganizationCreativeSetsOpt) ([]*CreativeSet, *Response, error) {
 	req, err := s.client.NewRequest("POST", "creativesets/find", opt)
 	if err != nil {
 		return nil, nil, err
@@ -109,18 +113,18 @@ type CreativeSetCreate struct {
 }
 
 type AdGroupCreativeSet struct {
-	ID                   int            `json:"id"`
-	AdGroupID            int            `json:"adGroupId"`
-	CreativeSetID        int            `json:"creativeSetId"`
-	CampaignID           int            `json:"campaignId"`
-	Status               *Status        `json:"status"`
-	ServingStatus        *ServingStatus `json:"servingStatus"`
-	ServingStatusReasons []string       `json:"servingStatusReasons"`
-	Deleted              bool           `json:"deleted"`
-	ModificationTime     string         `json:"modificationTime"`
+	ID                   int           `json:"id"`
+	AdGroupID            int64         `json:"adGroupId"`
+	CreativeSetID        int64         `json:"creativeSetId"`
+	CampaignID           int64         `json:"campaignId"`
+	Status               Status        `json:"status"`
+	ServingStatus        ServingStatus `json:"servingStatus"`
+	ServingStatusReasons interface{}   `json:"servingStatusReasons"`
+	Deleted              bool          `json:"deleted"`
+	ModificationTime     string        `json:"modificationTime"`
 }
 
-func (s *CreativeSetService) Create(ctx context.Context, campaignID, adGroupID int, data *CreativeSetCreate) (*AdGroupCreativeSet, *Response, error) {
+func (s *CreativeSetService) Create(ctx context.Context, campaignID, adGroupID int64, data *CreativeSetCreate) (*AdGroupCreativeSet, *Response, error) {
 	if campaignID == 0 {
 		return nil, nil, fmt.Errorf("campaignID can not be 0")
 	}
@@ -142,7 +146,7 @@ func (s *CreativeSetService) Create(ctx context.Context, campaignID, adGroupID i
 }
 
 // Updates an ad group Creative Set using an identifier.
-func (s *CreativeSetService) EditStatus(ctx context.Context, campaignID, adGroupID, adGroupCreativeSetID int, status Status) (*AdGroupCreativeSet, *Response, error) {
+func (s *CreativeSetService) EditStatus(ctx context.Context, campaignID, adGroupID, adGroupCreativeSetID int64, status Status) (*AdGroupCreativeSet, *Response, error) {
 	putData := map[string]Status{
 		"status": status,
 	}
@@ -162,7 +166,7 @@ func (s *CreativeSetService) EditStatus(ctx context.Context, campaignID, adGroup
 }
 
 // Deletes Creative Sets from a specified ad group.
-func (s *CreativeSetService) Delete(ctx context.Context, campaignID, adGroupID int, adGroupCreativeSetIDs []int) (*int, *Response, error) {
+func (s *CreativeSetService) Delete(ctx context.Context, campaignID, adGroupID int64, adGroupCreativeSetIDs []int64) (*int, *Response, error) {
 	u := fmt.Sprintf("campaigns/%d/adgroups/%d/adgroupcreativesets/delete/bulk", campaignID, adGroupID)
 	req, err := s.client.NewRequest("PUT", u, adGroupCreativeSetIDs)
 	if err != nil {
@@ -179,7 +183,7 @@ func (s *CreativeSetService) Delete(ctx context.Context, campaignID, adGroupID i
 }
 
 // Updates a Creative Set name using an identifier.
-func (s *CreativeSetService) EditName(ctx context.Context, creativeSetId int, name string) (*CreativeSet, *Response, error) {
+func (s *CreativeSetService) EditName(ctx context.Context, creativeSetId int64, name string) (*CreativeSet, *Response, error) {
 	putData := map[string]string{
 		"name": name,
 	}

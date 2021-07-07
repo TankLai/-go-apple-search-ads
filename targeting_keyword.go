@@ -123,7 +123,7 @@ func (s *AdGroupTargetingKeywordService) Find(ctx context.Context, campaignID in
 		return nil, nil, fmt.Errorf("campaignID can not be 0")
 	}
 
-	req, err := s.client.NewRequest("GET", fmt.Sprintf("campaigns/%d/adgroups/targetingkeywords/find", campaignID), selector)
+	req, err := s.client.NewRequest("POST", fmt.Sprintf("campaigns/%d/adgroups/targetingkeywords/find", campaignID), selector)
 	if err != nil {
 		return nil, nil, err
 	}

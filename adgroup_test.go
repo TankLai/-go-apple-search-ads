@@ -5,136 +5,122 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"reflect"
-	"strings"
 	"testing"
+	"time"
 )
 
+var campaignID = int64(580657822)
+
 func TestAdGroupService_List(t *testing.T) {
-	client, mux, _, teardown := setup()
-	t.Log("Setup Done")
-	defer teardown()
-
-	mux.HandleFunc("/campaigns/1234/adgroups", func(w http.ResponseWriter, r *http.Request) {
-		testMethod(t, r, "GET")
-
-		w.WriteHeader(http.StatusOK)
-		w.Write(loadFixture("adgroups.json"))
-	})
-	opt := ListOptions{}
-	got, _, err := client.AdGroup.List(context.Background(), 1234, &opt)
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("AdGroup.List returned error: %v", err)
+		panic(err)
 	}
-
-	want := []*AdGroup{}
-	responseToInterface(loadFixture("adgroups.json"), &want)
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("AdGroup.List = %+v, want %+v", got, want)
+	newAG, _, err := client.AdGroup.List(context.Background(), campaignID, &ListOptions{
+		Limit:  100,
+		Offset: 0,
+	})
+	if err != nil {
+		panic(err)
 	}
+	aa, _ := json.Marshal(newAG)
+	fmt.Printf(string(aa))
 }
 
 func TestAdGroupService_Get(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
-
-	wantAcceptHeaders := []string{"application/json"}
-	mux.HandleFunc("/campaigns/1234/adgroups/1234", func(w http.ResponseWriter, r *http.Request) {
-		testMethod(t, r, "GET")
-		testHeader(t, r, "Accept", strings.Join(wantAcceptHeaders, ", "))
-		w.Write(loadFixture("adgroup.json"))
-	})
-
-	got, _, err := client.AdGroup.Get(context.Background(), 1234, 1234)
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("AdGroup.Get returned error: %v", err)
+		panic(err)
 	}
-
-	want := &AdGroup{}
-	responseToInterface(loadFixture("adgroup.json"), want)
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("AdGroup.Get returned %+v, want %+v", got, want)
+	newAG, _, err := client.AdGroup.Get(context.Background(), campaignID, 580704484)
+	if err != nil {
+		panic(err)
 	}
+	aa, _ := json.Marshal(newAG)
+	fmt.Printf(string(aa))
 }
 
 func TestAdGroupService_Create(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
-
-	input := &AdGroup{Name: "t"}
-
-	wantAcceptHeaders := []string{"application/json"}
-	mux.HandleFunc("/campaigns/1234/adgroups", func(w http.ResponseWriter, r *http.Request) {
-		v := new(AdGroup)
-		json.NewDecoder(r.Body).Decode(v)
-		testMethod(t, r, "POST")
-		testHeader(t, r, "Accept", strings.Join(wantAcceptHeaders, ", "))
-		if !reflect.DeepEqual(v, input) {
-			t.Errorf("Request body = %+v, want %+v", v, input)
-		}
-		fmt.Fprint(w, `{ "data": {"id":1} }`)
-	})
-
-	got, _, err := client.AdGroup.Create(context.Background(), 1234, input)
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("AdGroup.Create returned error: %v", err)
+		panic(err)
 	}
-
-	want := &AdGroup{ID: 1}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("AdGroup.Create returned %+v, want %+v", got, want)
+	newAG, _, err := client.AdGroup.Create(context.Background(), campaignID, &AdGroup{
+		CampaignID: campaignID,
+		Name:       "go-ad-group-example",
+		// CpaGoal:                nil,
+		AutomatedKeywordsOptIn: false,
+		DefaultBidAmount: &Amount{
+			Amount:   "0.5",
+			Currency: "USD",
+		},
+		StartTime:    time.Now().Add(5 * time.Hour).Format("2006-01-02T15:04:05.000"),
+		EndTime:      time.Now().Add(15 * time.Hour).Format("2006-01-02T15:04:05.000"),
+		OrgID:        orgID,
+		PricingModel: CPC,
+		TargetingDimensions: &TargetingDimensions{
+			Age: Age{
+				Included: []AgeObj{
+					{
+						MaxAge: 40,
+						MinAge: 20,
+					},
+				},
+			},
+		},
+		Status: PAUSED,
+	})
+	if err != nil {
+		panic(err)
 	}
+	aa, _ := json.Marshal(newAG)
+	fmt.Printf(string(aa))
 }
 
 func TestAdGroupService_Edit(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
-
-	input := &AdGroup{Name: "New Name"}
-
-	wantAcceptHeaders := []string{"application/json"}
-	mux.HandleFunc("/campaigns/1234/adgroups/1234", func(w http.ResponseWriter, r *http.Request) {
-		v := new(AdGroup)
-		json.NewDecoder(r.Body).Decode(v)
-		testMethod(t, r, "PUT")
-		testHeader(t, r, "Accept", strings.Join(wantAcceptHeaders, ", "))
-		if !reflect.DeepEqual(v, input) {
-			t.Errorf("Request body = %+v, want %+v", v, input)
-		}
-		w.Write(loadFixture("adgroup_update.json"))
-	})
-
-	got, _, err := client.AdGroup.Edit(context.Background(), 1234, 1234, input)
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("AdGroup.Edit returned error: %v", err)
+		panic(err)
 	}
-
-	want := &AdGroup{}
-	responseToInterface(loadFixture("adgroup_update.json"), want)
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("AdGroup.Edit returned %+v, want %+v", got, want)
+	newAG, _, err := client.AdGroup.Edit(context.Background(), campaignID, 580704484, &AdGroup{
+		Name: "go-ad-group-example-up",
+		// CpaGoal:                nil,
+		AutomatedKeywordsOptIn: false,
+		DefaultBidAmount: &Amount{
+			Amount:   "0.5",
+			Currency: "USD",
+		},
+		StartTime: time.Now().Add(5 * time.Hour).Format("2006-01-02T15:04:05.000"),
+		EndTime:   time.Now().Add(15 * time.Hour).Format("2006-01-02T15:04:05.000"),
+		TargetingDimensions: &TargetingDimensions{
+			Age: Age{
+				Included: []AgeObj{
+					{
+						MaxAge: 45,
+						MinAge: 20,
+					},
+				},
+			},
+		},
+		Status: PAUSED,
+	})
+	if err != nil {
+		panic(err)
 	}
+	aa, _ := json.Marshal(newAG)
+	fmt.Printf(string(aa))
 }
 
 func TestAdGroupService_Delete(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
-
-	wantAcceptHeaders := []string{"application/json"}
-	mux.HandleFunc("/campaigns/1234/adgroups/1234", func(w http.ResponseWriter, r *http.Request) {
-		testMethod(t, r, "DELETE")
-		testHeader(t, r, "Accept", strings.Join(wantAcceptHeaders, ", "))
-		w.WriteHeader(http.StatusOK)
-		w.Write(loadFixture("adgroup_delete.json"))
-	})
-
-	resp, err := client.AdGroup.Delete(context.Background(), 1234, 1234)
+	// 580704484
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("AdGroup.Delete returned error: %v", err)
+		panic(err)
 	}
-	want := http.StatusOK
-	got := resp.StatusCode
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("AdGroup.Delete returned %+v, want %+v", got, want)
+	resp, err := client.AdGroup.Delete(context.Background(), campaignID, 580683578)
+	if err != nil {
+		panic(err)
 	}
+	aa, _ := json.Marshal(resp)
+	fmt.Printf(string(aa))
 }
