@@ -8,7 +8,7 @@ import (
 type BillingEvent byte
 
 const (
-	TAPS BillingEvent = iota
+	TAPS BillingEvent = iota + 1
 	IMPRESSIONS
 )
 

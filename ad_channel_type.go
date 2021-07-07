@@ -8,7 +8,7 @@ import (
 type AdChannelType byte
 
 const (
-	SEARCH AdChannelType = iota
+	SEARCH AdChannelType = iota + 1
 	DISPLAY
 )
 
