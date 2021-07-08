@@ -36,6 +36,7 @@ type Client struct {
 	AdGroupNegativeKeyword  *AdGroupNegativeKeywordService
 	AdGroupTargetingKeyword *AdGroupTargetingKeywordService
 	CreativeSet             *CreativeSetService
+	AdGroupCreativeSet      *AdGroupCreativeSetService
 	AppAsset                *AppAssetService
 	Search                  *SearchService
 	Report                  *ReportService
@@ -121,6 +122,7 @@ func NewV4Client(httpClient *http.Client, Authorization string, orgID *int64) (*
 	c.AdGroupNegativeKeyword = (*AdGroupNegativeKeywordService)(&c.common)
 	c.AdGroupTargetingKeyword = (*AdGroupTargetingKeywordService)(&c.common)
 	c.CreativeSet = (*CreativeSetService)(&c.common)
+	c.AdGroupCreativeSet = (*AdGroupCreativeSetService)(&c.common)
 	c.AppAsset = (*AppAssetService)(&c.common)
 	c.Search = (*SearchService)(&c.common)
 	c.ACL = (*ACLService)(&c.common)
