@@ -12,17 +12,23 @@ type Status byte
 const (
 	ENABLED Status = iota
 	PAUSED
+	VALID
+	INVALID
 )
 
 var (
 	_StatusNameToValue = map[string]Status{
 		"ENABLED": ENABLED,
 		"PAUSED":  PAUSED,
+		"VALID":   VALID,
+		"INVALID": INVALID,
 	}
 
 	_StatusValueToName = map[Status]string{
 		ENABLED: "ENABLED",
 		PAUSED:  "PAUSED",
+		VALID:   "VALID",
+		INVALID: "INVALID",
 	}
 )
 
@@ -32,6 +38,8 @@ func init() {
 		_StatusNameToValue = map[string]Status{
 			interface{}(ENABLED).(fmt.Stringer).String(): ENABLED,
 			interface{}(PAUSED).(fmt.Stringer).String():  PAUSED,
+			interface{}(VALID).(fmt.Stringer).String():   VALID,
+			interface{}(INVALID).(fmt.Stringer).String(): INVALID,
 		}
 	}
 }

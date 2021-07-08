@@ -24,7 +24,7 @@ type AdGroup struct {
 	Status                 Status               `json:"status,omitempty"`
 	ServingStatus          ServingStatus        `json:"servingStatus,omitempty"`
 	DisplayStatus          DisplayStatus        `json:"displayStatus,omitempty"`
-	ServingStateReasons    []string             `json:"servingStateReasons,omitempty"`
+	ServingStateReasons    interface{}          `json:"servingStateReasons,omitempty"`
 	Deleted                bool                 `json:"deleted,omitempty"`
 	PricingModel           PricingModel         `json:"pricingModel,omitempty"`
 }

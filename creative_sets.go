@@ -6,12 +6,12 @@ import (
 )
 
 type CreativeSet struct {
-	ID                int                 `json:"id,omitempty"`
-	OrgID             int                 `json:"orgId,omitempty"`
-	AdamID            int                 `json:"adamId,omitempty"`
+	ID                int64               `json:"id,omitempty"`
+	OrgID             int64               `json:"orgId,omitempty"`
+	AdamID            int64               `json:"adamId,omitempty"`
 	Name              string              `json:"name,omitempty"`
 	LanguageCode      string              `json:"languageCode,omitempty"`
-	Status            string              `json:"status,omitempty"`
+	Status            Status              `json:"status,omitempty"`
 	StatusReasons     []string            `json:"statusReasons,omitempty"`
 	CreativeSetAssets []*CreativeSetAsset `json:"creativeSetAssets,omitempty"`
 }
@@ -171,7 +171,7 @@ func (s *CreativeSetService) EditStatus(ctx context.Context, campaignID, adGroup
 // Deletes Creative Sets from a specified ad group.
 func (s *CreativeSetService) Delete(ctx context.Context, campaignID, adGroupID int64, adGroupCreativeSetIDs []int64) (*int, *Response, error) {
 	u := fmt.Sprintf("campaigns/%d/adgroups/%d/adgroupcreativesets/delete/bulk", campaignID, adGroupID)
-	req, err := s.client.NewRequest("PUT", u, adGroupCreativeSetIDs)
+	req, err := s.client.NewRequest("POST", u, adGroupCreativeSetIDs)
 	if err != nil {
 		return nil, nil, err
 	}

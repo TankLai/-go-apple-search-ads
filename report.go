@@ -19,11 +19,18 @@ type CampaignReportingDataResponse struct {
 }
 
 type CampaignReportRow struct {
-	Other       bool             `json:"other"`
-	Metadata    CampaignMetadata `json:"metadata"`
-	Granularity []Statistics     `json:"granularity,omitemtpy"`
-	Total       Statistics       `json:"total"`
+	Other       bool              `json:"other"`
+	Metadata    CampaignMetadata  `json:"metadata"`
+	Granularity []Statistics      `json:"granularity,omitemtpy"`
+	Total       Statistics        `json:"total"`
+	Insights    BidRecommendation `json:"insights,omitemtpy"`
 }
+
+type BidRecommendation struct {
+	BidMin Amount `json:"bidMin"`
+	BidMax Amount `json:"bidMax"`
+}
+
 type CampaignMetadata struct {
 	CampaignID                         int64             `json:"campaignId"`
 	CampaignName                       string            `json:"campaignName"`
@@ -68,11 +75,13 @@ type AdGroupReportingDataResponse struct {
 }
 
 type AdGroupReportRow struct {
-	Other       bool            `json:"other"`
-	Metadata    AdGroupMetadata `json:"metadata"`
-	Granularity []Statistics    `json:"granularity,omitemtpy"`
-	Total       Statistics      `json:"total"`
+	Other       bool              `json:"other"`
+	Metadata    AdGroupMetadata   `json:"metadata"`
+	Granularity []Statistics      `json:"granularity,omitemtpy"`
+	Total       Statistics        `json:"total"`
+	Insights    BidRecommendation `json:"insights,omitemtpy"`
 }
+
 type AdGroupMetadata struct {
 	AdGroupID                  int64              `json:"adGroupId"`
 	AdGroupName                string             `json:"adGroupName"`
@@ -118,10 +127,11 @@ type KeywordReportingDataResponse struct {
 }
 
 type KeywordReportRow struct {
-	Other       bool            `json:"other"`
-	Metadata    KeywordMetadata `json:"metadata"`
-	Granularity []Statistics    `json:"granularity,omitemtpy"`
-	Total       Statistics      `json:"total"`
+	Other       bool              `json:"other"`
+	Metadata    KeywordMetadata   `json:"metadata"`
+	Granularity []Statistics      `json:"granularity,omitemtpy"`
+	Total       Statistics        `json:"total"`
+	Insights    BidRecommendation `json:"insights,omitemtpy"`
 }
 type KeywordMetadata struct {
 	KeywordID            int64                `json:"keywordId"`
@@ -170,6 +180,7 @@ type SearchTermsReportRow struct {
 	Metadata    SearchTermMetadata `json:"metadata"`
 	Granularity []Statistics       `json:"granularity,omitemtpy"`
 	Total       Statistics         `json:"total"`
+	Insights    BidRecommendation  `json:"insights,omitemtpy"`
 }
 type SearchTermMetadata struct {
 	KeywordID            int64                `json:"keywordId"`
@@ -203,6 +214,57 @@ func (s *ReportService) SearchTerms(ctx context.Context, campaignID int64, filte
 	return report, resp, nil
 }
 
+// CreativeSetReport to hold Reports of campaign especially Metadata
+type CreativeSetReport struct {
+	ReportingDataResponse CreativeSetReportingDataResponse `json:"reportingDataResponse"`
+}
+
+type CreativeSetReportingDataResponse struct {
+	Row         []CreativeSetReportRow `json:"row"`
+	GrandTotals GrandTotals            `json:"grandTotals"`
+}
+
+type CreativeSetReportRow struct {
+	Other       bool                `json:"other"`
+	Metadata    CreativeSetMetadata `json:"metadata"`
+	Granularity []Statistics        `json:"granularity,omitemtpy"`
+	Total       Statistics          `json:"total"`
+	Insights    BidRecommendation   `json:"insights,omitemtpy"`
+}
+type CreativeSetMetadata struct {
+	CreativeSetID                  int           `json:"creativeSetId"`
+	CreativeSetName                string        `json:"creativeSetName"`
+	DisplayStatus                  DisplayStatus `json:"displayStatus"`
+	CreativeSetLanguageDisplayName interface{}   `json:"creativeSetLanguageDisplayName"`
+	Deleted                        bool          `json:"deleted"`
+	Status                         Status        `json:"status"`
+	OrgID                          int64         `json:"orgId"`
+	CampaignID                     int64         `json:"campaignId"`
+	AdGroupID                      int64         `json:"adGroupId"`
+	AdGroupCreativeSetID           int64         `json:"adGroupCreativeSetId"`
+	CreationTime                   string        `json:"creationTime"`
+	ModificationTime               string        `json:"modificationTime"`
+	AdFormat                       string        `json:"adFormat"`
+}
+
+// CreativeSet to return reports of CreativeSet
+func (s *ReportService) CreativeSet(ctx context.Context, campaignID int64, filter *ReportFilter) (*CreativeSetReport, *Response, error) {
+	if campaignID == 0 {
+		return nil, nil, fmt.Errorf("campaignID can not be 0")
+	}
+	u := fmt.Sprintf("reports/campaigns/%d/creativesets", campaignID)
+	req, err := s.client.NewRequest("POST", u, filter)
+	if err != nil {
+		return nil, nil, err
+	}
+	report := new(CreativeSetReport)
+	resp, err := s.client.Do(ctx, req, &report)
+	if err != nil {
+		return nil, resp, err
+	}
+	return report, resp, nil
+}
+
 // General Report data model stuff
 
 type GrandTotals struct {
@@ -220,6 +282,7 @@ type Statistics struct {
 	LatOffInstalls int     `json:"latOffInstalls"`
 	TTR            float64 `json:"ttr"`
 	AvgCPA         Amount  `json:"avgCPA"`
+	AvgCPM         Amount  `json:"avgCPM"`
 	AvgCPT         Amount  `json:"avgCPT"`
 	LocalSpend     Amount  `json:"localSpend"`
 	ConversionRate float64 `json:"conversionRate"`
