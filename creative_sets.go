@@ -131,8 +131,11 @@ func (s *CreativeSetService) Create(ctx context.Context, campaignID, adGroupID i
 	if adGroupID == 0 {
 		return nil, nil, fmt.Errorf("adGroupID can not be 0")
 	}
+	reqData := map[string]*CreativeSetCreate{
+		"creativeSet": data,
+	}
 	u := fmt.Sprintf("campaigns/%d/adgroups/%d/adgroupcreativesets/creativesets", campaignID, adGroupID)
-	req, err := s.client.NewRequest("POST", u, data)
+	req, err := s.client.NewRequest("POST", u, reqData)
 	if err != nil {
 		return nil, nil, err
 	}
