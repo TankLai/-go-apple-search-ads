@@ -34,3 +34,25 @@ func (s *ACLService) List(ctx context.Context, opt *ListOptions) ([]*ACL, *Respo
 
 	return acls, resp, nil
 }
+
+type Me struct {
+	UserId      int64 `json:"userId"`
+	ParentOrgId int64 `json:"parentOrgId"`
+}
+
+// The API caller identifiers.
+func (s *ACLService) Me(ctx context.Context) (*Me, *Response, error) {
+	req, err := s.client.NewRequest("GET", "me", nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	me := Me{}
+
+	resp, err := s.client.Do(ctx, req, &me)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return &me, resp, nil
+}

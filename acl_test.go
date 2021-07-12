@@ -2,31 +2,37 @@ package searchads
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
-	"reflect"
 	"testing"
 )
 
 func TestACLService_List(t *testing.T) {
-	client, mux, _, teardown := setup()
-	t.Log("Setup Done")
-	defer teardown()
-
-	mux.HandleFunc("/acls", func(w http.ResponseWriter, r *http.Request) {
-		testMethod(t, r, "GET")
-
-		w.WriteHeader(http.StatusOK)
-		w.Write(loadFixture("acls.json"))
-	})
-	opt := ListOptions{}
-	got, _, err := client.ACL.List(context.Background(), &opt)
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
 	if err != nil {
-		t.Errorf("ACL.List returned error: %v", err)
+		panic(err)
 	}
+	newAG, _, err := client.ACL.List(context.Background(), &ListOptions{
+		Limit:  100,
+		Offset: 0,
+	})
+	if err != nil {
+		panic(err)
+	}
+	aa, _ := json.Marshal(newAG)
+	fmt.Printf(string(aa))
+}
 
-	want := []*ACL{}
-	responseToInterface(loadFixture("acls.json"), &want)
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ACL.List = %+v, want %+v", got, want)
+func TestACLService_Me(t *testing.T) {
+	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)
+	if err != nil {
+		panic(err)
 	}
+	newAG, _, err := client.ACL.Me(context.Background())
+	if err != nil {
+		panic(err)
+	}
+	aa, _ := json.Marshal(newAG)
+	fmt.Printf(string(aa))
 }
