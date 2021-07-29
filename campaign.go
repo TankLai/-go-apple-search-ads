@@ -105,7 +105,7 @@ func (s *CampaignService) Create(ctx context.Context, data *Campaign) (*Campaign
 	return c, resp, nil
 }
 
-// Edit will update an existing Campaign
+// DoEdit will update an existing Campaign
 func (s *CampaignService) Edit(ctx context.Context, id int64, data *Campaign, clearGeoTargetingOnCountryOrRegionChange bool) (*Campaign, *Response, error) {
 	putData := map[string]interface{}{
 		"campaign": data,

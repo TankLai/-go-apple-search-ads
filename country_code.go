@@ -332,3 +332,12 @@ func ParseCountryCodeSlice(CountriesOrRegions []CountryCode) string {
 	json.Unmarshal(countriesBytes, &countriesSlice)
 	return strings.Join(countriesSlice, ",")
 }
+
+// EG,IN
+func ParseCountryCodeString(countriesOrRegions string) []CountryCode {
+	crSlice := strings.Split(countriesOrRegions, ",")
+	countriesBytes, _ := json.Marshal(crSlice)
+	countriesSlice := make([]CountryCode, 0)
+	json.Unmarshal(countriesBytes, &countriesSlice)
+	return countriesSlice
+}

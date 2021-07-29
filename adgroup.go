@@ -30,14 +30,14 @@ type AdGroup struct {
 }
 
 type TargetingDimensions struct {
-	Age            Age            `json:"age,omitempty"`
-	Gender         Gender         `json:"gender,omitemptyr"`
-	Country        Country        `json:"country,omitempty"`
-	AdminArea      AdminArea      `json:"adminArea,omitempty"`
-	Locality       Locality       `json:"locality,omitempty"`
-	DeviceClass    DeviceClass    `json:"deviceClass,omitempty"`
-	Daypart        Daypart        `json:"daypart,omitempty"`
-	AppDownloaders AppDownloaders `json:"appDownloaders,omitempty"`
+	Age            *Age            `json:"age,omitempty"`
+	Gender         *Gender         `json:"gender,omitemptyr"`
+	Country        *Country        `json:"country,omitempty"`
+	AdminArea      *AdminArea      `json:"adminArea,omitempty"`
+	Locality       *Locality       `json:"locality,omitempty"`
+	DeviceClass    *DeviceClass    `json:"deviceClass,omitempty"`
+	Daypart        *Daypart        `json:"daypart,omitempty"`
+	AppDownloaders *AppDownloaders `json:"appDownloaders,omitempty"`
 }
 
 type Country struct {
@@ -147,7 +147,7 @@ func (s *AdGroupService) Create(ctx context.Context, campaignID int64, data *AdG
 	return adG, resp, nil
 }
 
-// Edit will update an existing AdGroup on a Campaign
+// DoEdit will update an existing AdGroup on a Campaign
 func (s *AdGroupService) Edit(ctx context.Context, campaignID int64, id int64, data *AdGroup) (*AdGroup, *Response, error) {
 	if campaignID == 0 {
 		return nil, nil, fmt.Errorf("campaignID can not be 0")

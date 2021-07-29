@@ -101,7 +101,7 @@ func (s *AdGroupTargetingKeywordService) UpdateBulk(ctx context.Context, campaig
 	if adGroupID == 0 {
 		return nil, nil, fmt.Errorf("adGroupID can not be 0")
 	}
-	fmt.Println(data)
+
 	u := fmt.Sprintf("campaigns/%d/adgroups/%d/targetingkeywords/bulk", campaignID, adGroupID)
 	req, err := s.client.NewRequest("PUT", u, data)
 	if err != nil {

@@ -98,7 +98,7 @@ func (s *CampaignNegativeKeywordService) UpdateBulk(ctx context.Context, campaig
 }
 
 // Deletes negative keywords from a campaign.
-func (s *CampaignNegativeKeywordService) Delete(ctx context.Context, campaignID int64, keywordsIDs []int) (*int, *Response, error) {
+func (s *CampaignNegativeKeywordService) Delete(ctx context.Context, campaignID int64, keywordsIDs []int64) (*int, *Response, error) {
 	u := fmt.Sprintf("campaigns/%d/negativekeywords/delete/bulk", campaignID)
 	req, err := s.client.NewRequest("POST", u, keywordsIDs)
 	if err != nil {
@@ -206,7 +206,7 @@ func (s *AdGroupNegativeKeywordService) UpdateBulk(ctx context.Context, campaign
 }
 
 // Deletes negative keywords from an ad group.
-func (s *AdGroupNegativeKeywordService) Delete(ctx context.Context, campaignID, adGroupID int64, keywordsIDs []int) (*int, *Response, error) {
+func (s *AdGroupNegativeKeywordService) Delete(ctx context.Context, campaignID, adGroupID int64, keywordsIDs []int64) (*int, *Response, error) {
 	u := fmt.Sprintf("campaigns/%d/adgroups/%d/negativekeywords/delete/bulk", campaignID, adGroupID)
 	req, err := s.client.NewRequest("POST", u, keywordsIDs)
 	if err != nil {

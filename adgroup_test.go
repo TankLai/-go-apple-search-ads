@@ -59,7 +59,7 @@ func TestAdGroupService_Create(t *testing.T) {
 		OrgID:        orgID,
 		PricingModel: CPC,
 		TargetingDimensions: &TargetingDimensions{
-			Age: Age{
+			Age: &Age{
 				Included: []AgeObj{
 					{
 						MaxAge: 40,
@@ -93,7 +93,7 @@ func TestAdGroupService_Edit(t *testing.T) {
 		StartTime: time.Now().Add(5 * time.Hour).Format("2006-01-02T15:04:05.000"),
 		EndTime:   time.Now().Add(15 * time.Hour).Format("2006-01-02T15:04:05.000"),
 		TargetingDimensions: &TargetingDimensions{
-			Age: Age{
+			Age: &Age{
 				Included: []AgeObj{
 					{
 						MaxAge: 45,
