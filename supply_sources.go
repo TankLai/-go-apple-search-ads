@@ -8,7 +8,7 @@ import (
 type SupplySources byte
 
 const (
-	APPSTORE_SEARCH_RESULTS SupplySources = iota
+	APPSTORE_SEARCH_RESULTS SupplySources = iota + 1
 	APPSTORE_SEARCH_TAB
 )
 

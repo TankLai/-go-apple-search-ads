@@ -10,7 +10,7 @@ type KeywordStatus byte
 
 // KEYWORD_ACTIVE and KEYWORD_PAUSED enum values
 const (
-	KEYWORD_ACTIVE KeywordStatus = iota
+	KEYWORD_ACTIVE KeywordStatus = iota + 1
 	KEYWORD_PAUSED
 )
 

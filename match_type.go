@@ -10,7 +10,7 @@ type MatchType byte
 
 // (MatchTypeBroad,MatchTypeExact,MatchTypeAuto) enum values
 const (
-	MatchTypeExact MatchType = iota
+	MatchTypeExact MatchType = iota + 1
 	MatchTypeBroad
 	MatchTypeAuto
 )

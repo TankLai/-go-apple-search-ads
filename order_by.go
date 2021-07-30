@@ -9,7 +9,7 @@ import (
 type OrderBy byte
 
 const (
-	OrderByAdminArea OrderBy = iota
+	OrderByAdminArea OrderBy = iota + 1
 	OrderByAgeRange
 	OrderByCountryCode
 	OrderByCountryOrRegion

@@ -10,7 +10,7 @@ type SearchTermSource byte
 
 // AUTO and TARGETED enum values
 const (
-	SearchTermSourceAuto SearchTermSource = iota
+	SearchTermSourceAuto SearchTermSource = iota + 1
 	SearchTermSourceTargeted
 )
 

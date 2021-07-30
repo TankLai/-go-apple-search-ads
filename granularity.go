@@ -10,7 +10,7 @@ type Granularity byte
 
 // HOURLY, DAILY, WEEKLY and MONTHLY enum values
 const (
-	HOURLY Granularity = iota
+	HOURLY Granularity = iota + 1
 	DAILY
 	WEEKLY
 	MONTHLY

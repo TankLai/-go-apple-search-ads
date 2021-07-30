@@ -10,7 +10,7 @@ type ServingStatus byte
 
 // RUNNING and NOT_RUNNING enum values
 const (
-	RUNNING ServingStatus = iota
+	RUNNING ServingStatus = iota + 1
 	NOT_RUNNING
 )
 

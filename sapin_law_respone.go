@@ -10,7 +10,7 @@ type SapinLawResponse byte
 
 // NOT_ANSWERED, FRENCH_BUSINESS and NOT_FRENCH_BUSINESS enum values
 const (
-	NOT_ANSWERED SapinLawResponse = iota
+	NOT_ANSWERED SapinLawResponse = iota + 1
 	FRENCH_BUSINESS
 	NOT_FRENCH_BUSINESS
 )

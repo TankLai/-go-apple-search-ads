@@ -14,8 +14,8 @@ type Campaign struct {
 	ID                                 int64              `json:"id,omitempty"`
 	OrgID                              int64              `json:"orgId,omitempty"`
 	Name                               string             `json:"name,omitempty"`
-	BudgetAmount                       Amount             `json:"budgetAmount,omitempty"`
-	DailyBudgetAmount                  Amount             `json:"dailyBudgetAmount,omitempty"`
+	BudgetAmount                       *Amount            `json:"budgetAmount,omitempty"`
+	DailyBudgetAmount                  *Amount            `json:"dailyBudgetAmount,omitempty"`
 	AdamID                             int64              `json:"adamId,omitempty"`
 	PaymentModel                       PaymentModel       `json:"paymentModel,omitempty"`
 	BudgetOrders                       []int              `json:"budgetOrders,omitempty"`

@@ -10,7 +10,7 @@ type PaymentModel byte
 
 // LOC and PAYG enum values
 const (
-	LOC PaymentModel = iota
+	LOC PaymentModel = iota + 1
 	PAYG
 	EMPTY
 )

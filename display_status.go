@@ -10,7 +10,7 @@ type DisplayStatus byte
 
 // RUNNING and PAUSED enum values
 const (
-	DS_RUNNING DisplayStatus = iota
+	DS_RUNNING DisplayStatus = iota + 1
 	DS_PAUSED
 	DS_ON_HOLD
 	DS_DELETED

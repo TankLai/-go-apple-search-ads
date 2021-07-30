@@ -10,7 +10,7 @@ type KeywordDisplayStatus byte
 
 // RUNNING and PAUSED enum values
 const (
-	KeywordDisplayStatusRunning KeywordDisplayStatus = iota
+	KeywordDisplayStatusRunning KeywordDisplayStatus = iota + 1
 	KeywordDisplayStatusPaused
 	KeywordDisplayStatusCampaignOnHold
 	KeywordDisplayStatusAdGroupOnHold

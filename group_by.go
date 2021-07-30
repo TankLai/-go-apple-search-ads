@@ -9,7 +9,7 @@ import (
 type GroupBy byte
 
 const (
-	GroupByAdminArea GroupBy = iota
+	GroupByAdminArea GroupBy = iota + 1
 	GroupByAgeRange
 	GroupByCountryCode
 	GroupByCountryOrRegion

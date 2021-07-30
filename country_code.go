@@ -12,7 +12,7 @@ type CountryCode byte
 // CountryCode enum values for 46 countries (https://searchads.apple.com/countries-and-regions/)
 const (
 	// Africa, Middle East, and India
-	EG CountryCode = iota
+	EG CountryCode = iota + 1
 	IN
 	IL
 	JO

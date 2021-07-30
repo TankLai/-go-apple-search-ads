@@ -10,7 +10,7 @@ type Operator byte
 
 // IN, EQUALS, GREATER_THAN, LESS_THAN and STARTSWITH enum values
 const (
-	OperatorIn Operator = iota
+	OperatorIn Operator = iota + 1
 	OperatorContainsAny
 	OperatorEquals
 	OperatorGreaterThan

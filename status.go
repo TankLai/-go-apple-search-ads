@@ -10,7 +10,7 @@ type Status byte
 
 // ENABLED and PAUSED enum values
 const (
-	ENABLED Status = iota
+	ENABLED Status = iota + 1
 	PAUSED
 	VALID
 	INVALID

@@ -2,7 +2,6 @@ package searchads
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 )
 
@@ -130,8 +129,6 @@ func (s *AdGroupService) Create(ctx context.Context, campaignID int64, data *AdG
 	if campaignID == 0 {
 		return nil, nil, fmt.Errorf("campaignID can not be 0")
 	}
-	aa, _ := json.Marshal(data)
-	fmt.Println(string(aa))
 	u := fmt.Sprintf("campaigns/%d/adgroups", campaignID)
 	req, err := s.client.NewRequest("POST", u, data)
 	if err != nil {

@@ -10,7 +10,7 @@ type TimeZone byte
 
 // ORTZ and UTC enum values
 const (
-	ORTZ TimeZone = iota
+	ORTZ TimeZone = iota + 1
 	UTC
 )
 
