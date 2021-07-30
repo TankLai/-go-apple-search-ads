@@ -30,7 +30,7 @@ func TestAdGroupTargetingKeywordService_CreateBulk(t *testing.T) {
 			Text:      "muiscally",
 			Status:    KEYWORD_ACTIVE,
 			MatchType: MatchTypeExact,
-			BidAmount: Amount{
+			BidAmount: &Amount{
 				Amount:   "0.5",
 				Currency: "USD",
 			},
@@ -39,7 +39,7 @@ func TestAdGroupTargetingKeywordService_CreateBulk(t *testing.T) {
 			Text:      "toktok",
 			Status:    KEYWORD_ACTIVE,
 			MatchType: MatchTypeExact,
-			BidAmount: Amount{
+			BidAmount: &Amount{
 				Amount:   "0.6",
 				Currency: "USD",
 			},

@@ -9,9 +9,9 @@ type TargetingKeyword struct {
 	ID               int64         `json:"id,omitempty"`
 	AdGroupID        int64         `json:"adGroupId,omitempty"`
 	Text             string        `json:"text,omitempty"`
-	Status           KeywordStatus `json:"status"`
-	MatchType        MatchType     `json:"matchType"`
-	BidAmount        Amount        `json:"bidAmount"`
+	Status           KeywordStatus `json:"status,omitempty"`
+	MatchType        MatchType     `json:"matchType,omitempty"`
+	BidAmount        *Amount       `json:"bidAmount,omitempty"`
 	ModificationTime string        `json:"modificationTime,omitempty"`
 	Deleted          bool          `json:"deleted,omitempty"`
 }

@@ -29,14 +29,14 @@ type AdGroup struct {
 }
 
 type TargetingDimensions struct {
-	Age            *Age            `json:"age,omitempty"`
-	Gender         *Gender         `json:"gender,omitemptyr"`
-	Country        *Country        `json:"country,omitempty"`
-	AdminArea      *AdminArea      `json:"adminArea,omitempty"`
-	Locality       *Locality       `json:"locality,omitempty"`
-	DeviceClass    *DeviceClass    `json:"deviceClass,omitempty"`
-	Daypart        *Daypart        `json:"daypart,omitempty"`
-	AppDownloaders *AppDownloaders `json:"appDownloaders,omitempty"`
+	Age            *Age            `json:"age"`
+	Gender         *Gender         `json:"gender"`
+	Country        *Country        `json:"country"`
+	AdminArea      *AdminArea      `json:"adminArea"`
+	Locality       *Locality       `json:"locality"`
+	DeviceClass    *DeviceClass    `json:"deviceClass"`
+	Daypart        *Daypart        `json:"daypart"`
+	AppDownloaders *AppDownloaders `json:"appDownloaders"`
 }
 
 type Country struct {
