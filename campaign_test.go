@@ -47,11 +47,11 @@ func TestCampaignService_Create(t *testing.T) {
 	newC, _, err := client.Campaign.Create(context.Background(), &Campaign{
 		OrgID: orgID,
 		Name:  "go-sdk-example2",
-		BudgetAmount: Amount{
+		BudgetAmount: &Amount{
 			Amount:   "10",
 			Currency: "USD",
 		},
-		DailyBudgetAmount: Amount{
+		DailyBudgetAmount: &Amount{
 			Amount:   "1",
 			Currency: "USD",
 		},
@@ -76,11 +76,11 @@ func TestCampaignService_Edit(t *testing.T) {
 	}
 	newC, _, err := client.Campaign.Edit(context.Background(), 580657822, &Campaign{
 		Name: "go-sdk-example-update",
-		BudgetAmount: Amount{
+		BudgetAmount: &Amount{
 			Amount:   "15",
 			Currency: "USD",
 		},
-		DailyBudgetAmount: Amount{
+		DailyBudgetAmount: &Amount{
 			Amount:   "1",
 			Currency: "USD",
 		},

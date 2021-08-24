@@ -5,10 +5,23 @@ import (
 )
 
 type SearchApp struct {
-	AdamID               int64         `json:"adamId"`
-	AppName              string        `json:"appName"`
-	DeveloperName        string        `json:"developerName"`
-	CountryOrRegionCodes []CountryCode `json:"countryOrRegionCodes"`
+	AdamID               int64             `json:"adamId"`
+	AppName              string            `json:"appName"`
+	DeveloperName        string            `json:"developerName"`
+	CountryOrRegionCodes []CountryCode     `json:"countryOrRegionCodes"`
+	IconUrl              string            `json:"iconUrl"`
+	Status               float64           `json:"status"`
+	CountryOrRegion      []CountryOrRegion `json:"countryOrRegion"`
+}
+
+type CountryOrRegion struct {
+	Area     string                   `json:"area"`
+	Countrys []CountryOrRegionCountry `json:"countrys"`
+}
+
+type CountryOrRegionCountry struct {
+	Code string `json:"code"`
+	Name string `json:"name"`
 }
 
 // CampaignService struct to hold individual service
@@ -75,4 +88,34 @@ func (s *SearchService) Geo(ctx context.Context, opt *SearchGeoOptions) ([]*Sear
 	}
 
 	return searchGeo, resp, nil
+}
+
+type SearchCpt struct {
+	Amount   string `json:"amount"`
+	Currency string `json:"currency"`
+}
+
+type SearchCptOptions struct {
+	AdamID      int      `json:"adamId"`
+	Storefronts []string `json:"storefronts"`
+}
+
+func (s *SearchService) Cpt(ctx context.Context, opt *SearchCptOptions) (*SearchCpt, *Response, error) {
+	u, err := addOptions("campaigns/cpt", opt)
+	if err != nil {
+		return nil, nil, err
+	}
+	req, err := s.client.NewRequest("Post", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	searchCpt := &SearchCpt{}
+
+	resp, err := s.client.Do(ctx, req, &searchCpt)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return searchCpt, resp, nil
 }

@@ -12,7 +12,7 @@ type AdGroup struct {
 	ID                     int64                `json:"id,omitempty"`
 	CampaignID             int64                `json:"campaignId,omitempty"`
 	Name                   string               `json:"name,omitempty"`
-	CpaGoal                *Amount              `json:"cpaGoal,omitempty"`
+	CpaGoal                *Amount              `json:"cpaGoal"`
 	StartTime              string               `json:"startTime,omitempty"`
 	EndTime                string               `json:"endTime,omitempty"`
 	AutomatedKeywordsOptIn bool                 `json:"automatedKeywordsOptIn"`
@@ -69,7 +69,7 @@ type Daypart struct {
 }
 
 type UserTime struct {
-	Included []string `json:"included,omitempty"`
+	Included []int `json:"included,omitempty"`
 }
 
 type DeviceClass struct {
