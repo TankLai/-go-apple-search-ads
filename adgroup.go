@@ -14,7 +14,7 @@ type AdGroup struct {
 	Name                   string               `json:"name,omitempty"`
 	CpaGoal                *Amount              `json:"cpaGoal"`
 	StartTime              string               `json:"startTime,omitempty"`
-	EndTime                string               `json:"endTime,omitempty"`
+	EndTime                string               `json:"endTime"`
 	AutomatedKeywordsOptIn bool                 `json:"automatedKeywordsOptIn"`
 	DefaultBidAmount       *Amount              `json:"defaultBidAmount,omitempty"`
 	TargetingDimensions    *TargetingDimensions `json:"targetingDimensions,omitempty"`
@@ -185,11 +185,11 @@ func (s *AdGroupService) Delete(ctx context.Context, campaignID int64, id int64)
 }
 
 // Fetches ad groups within a campaign.
-func (s *AdGroupService) Find(ctx context.Context, campaignID int64, opt *ListOptions) ([]*AdGroup, *Response, error) {
+func (s *AdGroupService) Find(ctx context.Context, campaignID int64, sel *Selector) ([]*AdGroup, *Response, error) {
 	if campaignID == 0 {
 		return nil, nil, fmt.Errorf("campaignID can not be 0")
 	}
-	req, err := s.client.NewRequest("POST", fmt.Sprintf("campaigns/%d/adgroups/find", campaignID), opt)
+	req, err := s.client.NewRequest("POST", fmt.Sprintf("campaigns/%d/adgroups/find", campaignID), sel)
 	if err != nil {
 		return nil, nil, err
 	}

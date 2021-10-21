@@ -8,10 +8,12 @@ import (
 type AdGroupCreativeSetService service
 
 type CreativeSetCreate struct {
-	AdamID       int      `json:"adamId,omitempty"`
-	Name         string   `json:"name,omitempty"`
-	LanguageCode string   `json:"languageCode,omitempty"`
-	AssetsGenIds []string `json:"assetsGenIds,omitempty"`
+	AdamID              int      `json:"adamId,omitempty"`
+	Name                string   `json:"name,omitempty"`
+	LanguageCode        string   `json:"languageCode,omitempty"`
+	LanguageDisplayName string   `json:"languageDisplayName,omitempty"`
+	Status              Status   `json:"status,omitempty"`
+	AssetsGenIds        []string `json:"assetsGenIds,omitempty"`
 }
 
 type AdGroupCreativeSet struct {
@@ -33,6 +35,9 @@ func (s *AdGroupCreativeSetService) Create(ctx context.Context, campaignID, adGr
 	if adGroupID == 0 {
 		return nil, nil, fmt.Errorf("adGroupID can not be 0")
 	}
+
+	data.LanguageDisplayName = ""
+
 	reqData := map[string]*CreativeSetCreate{
 		"creativeSet": data,
 	}
@@ -55,7 +60,7 @@ func (s *AdGroupCreativeSetService) EditStatus(ctx context.Context, campaignID, 
 	putData := map[string]Status{
 		"status": status,
 	}
-	u := fmt.Sprintf("campaigns/%d/adgroups/%d/adgroupcreativeset/%d", campaignID, adGroupID, adGroupCreativeSetID)
+	u := fmt.Sprintf("campaigns/%d/adgroup/%d/adgroupcreativeset/%d", campaignID, adGroupID, adGroupCreativeSetID)
 	req, err := s.client.NewRequest("PUT", u, putData)
 	if err != nil {
 		return nil, nil, err

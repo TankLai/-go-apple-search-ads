@@ -27,6 +27,7 @@ func TestOAuth(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println(oauthInfo)
 	fmt.Println(oauthInfo.AccessToken)
 	accessToken := oauthInfo.AccessToken
 	client, err := NewV4Client(&http.Client{}, accessToken, &orgID)

@@ -12,6 +12,8 @@ type ACL struct {
 	OrgName      string       `json:"orgName,omitempty"`
 	RoleNames    []string     `json:"roleNames,omitempty"`
 	PaymentModel PaymentModel `json:"paymentModel,omitempty"`
+	TimeZone     string       `json:"timeZone,omitempty"`
+	ParentOrgId  int64        `json:"parentOrgId,omitempty"`
 }
 
 // List function to get ACLs

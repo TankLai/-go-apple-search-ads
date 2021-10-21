@@ -341,3 +341,10 @@ func ParseCountryCodeString(countriesOrRegions string) []CountryCode {
 	json.Unmarshal(countriesBytes, &countriesSlice)
 	return countriesSlice
 }
+
+func ParseCountryCodeStrings(countriesOrRegions []string) []CountryCode {
+	countriesBytes, _ := json.Marshal(countriesOrRegions)
+	countriesSlice := make([]CountryCode, 0)
+	json.Unmarshal(countriesBytes, &countriesSlice)
+	return countriesSlice
+}
